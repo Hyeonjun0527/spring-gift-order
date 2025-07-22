@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title
+      th:text="${#strings.isEmpty(action) || action.endsWith('/new')} ? '상품 등록' : '상품 수정'"></title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<h1 th:text="${#strings.isEmpty(action) || action.endsWith('/new')} ? '상품 등록' : '상품 수정'"></h1>
+<div th:if="${error}" class="alert error" th:text="${error}"></div>
+<form th:action="${action}" th:object="${productRequest}" method="post">
+  <div class="form-group">
+    <label for="name">이름</label>
+    <input type="text" id="name" th:field="*{name}"/>
+    <span th:errors="*{name}" class="error"></span>
+  </div>
+  <div class="form-group">
+    <label for="price">가격</label>
+    <input type="number" id="price" th:field="*{price}"/>
+    <span th:errors="*{price}" class="error"></span>
+  </div>
+  <div class="form-group">
+    <label for="imageUrl">이미지 URL</label>
+    <input type="text" id="imageUrl" th:field="*{imageUrl}"/>
+    <span th:errors="*{imageUrl}" class="error"></span>
+  </div>
+  <button type="submit" class="btn">저장</button>
+  <a th:href="@{/admin/products}" class="btn">취소</a>
+</form>
+</body>
+</html>

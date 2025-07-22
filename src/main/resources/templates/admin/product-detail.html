@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 상세</title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<h1>상품 상세</h1>
+<div th:if="${error}" class="alert error" th:text="${error}"></div>
+<div class="product-detail">
+  <p><strong>ID:</strong> <span th:text="${productResponse.id}"></span></p>
+  <p><strong>이름:</strong> <span th:text="${productResponse.name}"></span></p>
+  <p><strong>가격:</strong> <span th:text="${productResponse.price}"></span></p>
+  <p><strong>이미지:</strong> <img th:src="${productResponse.imageUrl}" alt="상품 이미지" width="100"/></p>
+</div>
+<a th:href="@{/admin/products/{id}/edit(id=${productResponse.id})}" class="btn">수정</a>
+<a th:href="@{/admin/products}" class="btn">목록</a>
+</body>
+</html>

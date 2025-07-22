@@ -1,0 +1,2 @@
+INSERT INTO member (id, email, password, role) VALUES (DEFAULT, 'test@test.com', 'cGFzc3dvcmQxMjM=', 'USER');
+INSERT INTO product (id, name, price, image_url) VALUES (DEFAULT, 'Test Product', 1000, 'http://test.com');
