@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+
+<title th:text="${memberId != null} ? '회원 수정' : '회원 등록'">회원 등록</title>
+
+<section>
+    <h2 th:text="${memberId != null} ? '회원 수정' : '회원 등록'">회원 등록</h2>
+
+    <form th:action="@{${memberId != null} ? '/admin/members/' + ${memberId} + '/edit' : '/admin/members/new'}"
+          th:object="${form}" method="post">
+        <div class="form-group">
+            <label>이메일:</label>
+            <input type="email" th:field="*{email}" required/>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></div>
+        </div>
+
+        <div class="form-group">
+            <label>비밀번호:</label>
+            <input type="password" th:field="*{password}" required/>
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" th:text="${memberId != null} ? '수정' : '등록'">등록</button>
+            <a th:href="@{/admin/members/list}">목록으로</a>
+        </div>
+    </form>
+</section>
+</html> 

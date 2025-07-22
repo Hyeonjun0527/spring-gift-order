@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+
+<title>회원 목록</title>
+
+<section>
+    <h2>회원 목록</h2>
+
+    <a th:href="@{/admin/members/new}">➕ 새 회원 등록</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>이메일</th>
+            <th>수정</th>
+            <th>삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="m : ${members}">
+            <td th:text="${m.id}">1</td>
+            <td th:text="${m.email}">이메일</td>
+            <td>
+                <a th:href="@{|/admin/members/${m.id}/edit|}">✏️ 수정</a>
+            </td>
+            <td>
+                <form th:action="@{|/admin/members/${m.id}|}" method="post"
+                      onsubmit="return confirm('정말 삭제할까요?');">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit">🗑 삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</html> 

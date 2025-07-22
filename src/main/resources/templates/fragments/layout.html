@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(title, content)">
+<head>
+    <title th:replace="${title}">기본 제목</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+
+<body>
+<header>
+    <h1>관리자 화면</h1>
+    <hr>
+</header>
+
+<main>
+    <div th:replace="${content}">기본 콘텐츠</div>
+</main>
+
+<footer>
+    <hr>
+    <p>© 2025 Gift Corp</p>
+</footer>
+</body>
+</html>

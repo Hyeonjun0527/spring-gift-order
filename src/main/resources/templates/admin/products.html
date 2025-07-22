@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+
+<title>상품 목록</title>
+
+<section>
+    <h2>상품 목록</h2>
+
+    <a th:href="@{/admin/products/new}">➕ 새 상품 등록</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>이름</th>
+            <th>가격</th>
+            <th>이미지</th>
+            <th>수정</th>
+            <th>삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${products.content}">
+            <td th:text="${p.name}">상품명</td>
+            <td th:text="${#numbers.formatInteger(p.price, 0, 'COMMA')}">0</td>
+            <td>
+                <img th:if="${p.imageUrl}" th:src="${p.imageUrl}" alt="이미지" width="60"/>
+            </td>
+            <td>
+                <a th:href="@{|/admin/products/${p.id}/edit|}">✏️ 수정</a>
+            </td>
+            <td>
+                <form th:action="@{|/admin/products/${p.id}/delete|}" method="post"
+                      onsubmit="return confirm('정말 삭제할까요?');">
+                    <button type="submit">🗑 삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <a th:if="${products.number > 0}"
+           th:href="@{'/admin/products?page=' + (${products.number} - 1) + '&size=' + ${products.size}}">이전</a>
+
+        <span th:text="${products.number + 1}">1</span> /
+        <span th:text="${products.totalPages}">1</span>
+
+        <a th:if="${products.number + 1 < products.totalPages}"
+           th:href="@{'/admin/products?page=' + (${products.number} + 1) + '&size=' + ${products.size}}">다음</a>
+    </div>
+</section>
+</html>
