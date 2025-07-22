@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 목록</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>회원 목록</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>비밀번호</th>
+            <th>관리</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${members}">
+            <td th:text="${member.name}">이름</td>
+            <td th:text="${member.email}">이메일</td>
+            <td th:text="${member.password}">비밀번호</td>
+            <td>
+                <a th:href="@{'/admin/members/' + ${member.id}}">상세</a>
+                <a th:href="@{'/admin/members/edit/' + ${member.id}}">수정</a>
+                <form th:action="@{/admin/members/{id}/delete(id=${member.id})}" method="post" style="display:inline">
+                    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;">
+        <a href="/admin/dashboard" class="top-button">대시보드</a>
+        <a href="/admin/members/new" class="top-button">회원 추가</a>
+    </div>
+</div>
+</body>
+</html>

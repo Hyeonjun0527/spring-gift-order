@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>회원 없음</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="container">
+    <h1>회원 정보를 찾을 수 없습니다 😢</h1>
+    <p th:text="${errorMessage}">입력하신 정보에 해당하는 회원이 존재하지 않습니다.</p>
+    <a href="javascript:history.back()">← 이전 페이지</a>
+</div>
+</body>
+</html>

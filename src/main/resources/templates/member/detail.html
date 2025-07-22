@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>회원 상세</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="container">
+  <h1>회원 상세</h1>
+
+  <p><strong>이름:</strong> <span th:text="${member.name}">상품명</span></p>
+  <p><strong>이메일:</strong> <span th:text="${member.email}">0</span></p>
+  <p><strong>비밀번호:</strong> <span th:text="${member.password}">비밀번호</span></p>
+
+  <div style="margin-top: 1.5rem;">
+    <a th:href="@{/admin/members/edit/{id}(id=${member.id})}">수정</a>
+    <form th:action="@{/admin/members/{id}/delete(id=${member.id})}" method="post" style="display:inline">
+      <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+    </form>
+  </div>
+
+  <div class="back-link">
+    <a th:href="@{/admin/members}">← 목록으로</a>
+  </div>
+</div>
+</body>
+</html>

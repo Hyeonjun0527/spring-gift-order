@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 목록</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>상품 목록</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>이름</th>
+            <th>가격</th>
+            <th>이미지 URL</th>
+            <th>관리</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.name}">이름</td>
+            <td th:text="${product.price} + '원'">가격</td>
+            <td th:text="${product.imageUrl}">이미지 URL</td>
+            <td>
+                <a th:href="@{'/admin/products/' + ${product.id}}">상세</a>
+                <a th:href="@{'/admin/products/edit/' + ${product.id}}">수정</a>
+                <form th:action="@{/admin/products/{id}/delete(id=${product.id})}" method="post" style="display:inline">
+                    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;">
+        <a href="/admin/dashboard" class="top-button">대시보드</a>
+        <a href="/admin/products/new" class="top-button">상품 추가</a>
+    </div>
+</div>
+</body>
+</html>
