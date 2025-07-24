@@ -1,0 +1,33 @@
+### 위시 추가
+POST http://localhost:8080/api/wishes
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "productId": {{productId}},
+  "quantity": 2
+}
+
+### 내 위시 목록 조회 (기본: page=0, size=5)
+GET http://localhost:8080/api/wishes
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### 내 위시 목록 조회 (페이지네이션: page=1, size=5)
+GET http://localhost:8080/api/wishes?page=1&size=5
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### 위시 수량 변경
+PUT http://localhost:8080/api/wishes/{{wishId}}/quantity
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "quantity": 5
+}
+
+### 위시 삭제
+DELETE http://localhost:8080/api/wishes/{{wishId}}
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}

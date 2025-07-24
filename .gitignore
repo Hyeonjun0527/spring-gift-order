@@ -38,3 +38,15 @@ out/
 
 ### Mac OS ###
 .DS_Store
+
+### Practice/Exercise ###
+practice/
+
+## Local Config ###
+**/application-*-local.yml
+**/application-*.local.yml
+
+## STUDY-*.MD ####
+**/STUDY-*.md
+**/STUDY.md
+**/STUDY_*.md

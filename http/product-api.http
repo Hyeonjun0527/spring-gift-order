@@ -1,0 +1,70 @@
+
+### 상품 여러 개 추가 (페이징 테스트용)
+# 요청을 여러 번 보내 6개의 상품을 추가합니다.
+POST {{url}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{ "name": "상품 1", "price": 1000, "imageUrl": "image1.jpg" }
+
+###
+POST {{url}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{ "name": "상품 2", "price": 2000, "imageUrl": "image2.jpg" }
+
+###
+POST {{url}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{ "name": "상품 3", "price": 3000, "imageUrl": "image3.jpg" }
+
+###
+POST {{url}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{ "name": "상품 4", "price": 4000, "imageUrl": "image4.jpg" }
+
+###
+POST {{url}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{ "name": "상품 5", "price": 5000, "imageUrl": "image5.jpg" }
+
+###
+POST {{url}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{ "name": "상품 6", "price": 6000, "imageUrl": "image6.jpg" }
+
+
+### 상품 목록 조회 (기본: page=0, size=5)
+GET {{url}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### 상품 목록 조회 (페이지네이션: page=1, size=5)
+# 6번째 상품을 확인하기 위한 요청
+GET {{url}}/api/products?page=1&size=5
+Content-Type: application/json
+
+###
+GET {{url}}/api/products/{{id}}
+
+###
+PUT {{url}}/api/products/{{id}}
+Content-Type: application/json
+
+{
+  "name": "카카오 무지 인형",
+  "price": 3500,
+  "imageUrl": "https://example.com/image-updated.jpg"
+}
+
+###
+DELETE {{url}}/api/products/{{id}}

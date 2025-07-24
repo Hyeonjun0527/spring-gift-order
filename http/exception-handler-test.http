@@ -1,0 +1,152 @@
+### GlobalExceptionHandler 테스트 (Product API 기반)
+### 변경된 ProblemDetail 형식 테스트용
+
+### 1. MethodArgumentNotValidException 테스트 - 검증 실패
+### 빈 이름, 음수 가격, 빈 URL로 검증 실패 유발
+POST {{url}}/api/products
+Content-Type: application/json
+
+{
+  "name": "",
+  "price": -1000,
+  "imageUrl": ""
+}
+
+### 2. MethodArgumentNotValidException 테스트 - null 값
+### null 값으로 검증 실패 유발
+POST {{url}}/api/products
+Content-Type: application/json
+
+{
+  "name": null,
+  "price": null,
+  "imageUrl": null
+}
+
+### 3. HttpMessageNotReadableException 테스트 - 잘못된 JSON
+### JSON 구문 오류로 파싱 실패 유발
+POST {{url}}/api/products
+Content-Type: application/json
+
+{
+  "name": "카카오 인형",
+  "price": ,
+  "imageUrl": "https://example.com/image.jpg"
+}
+
+### 4. HttpMessageNotReadableException 테스트 - 완전히 잘못된 JSON
+### 따옴표 없는 JSON으로 파싱 실패 유발
+POST {{url}}/api/products
+Content-Type: application/json
+
+{name: invalid, price: abc, imageUrl:}
+
+### 5. HttpMessageNotReadableException 테스트 - 타입 불일치
+### 문자열을 숫자 필드에 전달해서 타입 변환 실패 유발
+POST {{url}}/api/products
+Content-Type: application/json
+
+{
+  "name": "테스트 상품",
+  "price": "가격이 아닌 문자열",
+  "imageUrl": "https://example.com/image.jpg"
+}
+
+### 6. NullPointerException 테스트 - PathVariable에 null 전달
+### "null" 문자열을 ID로 전달 (Long.valueOf() 에서 NumberFormatException 가능성)
+GET {{url}}/api/products/null
+
+### 7. IllegalArgumentException 테스트 - 잘못된 PathVariable
+### 숫자가 아닌 문자열을 ID로 전달
+GET {{url}}/api/products/invalid-id
+
+### 8. IllegalArgumentException 테스트 - 음수 ID
+### 음수를 ID로 전달
+GET {{url}}/api/products/-1
+
+### 9. PUT 요청에서 검증 실패 테스트
+### 상품 수정 시 검증 실패
+PUT {{url}}/api/products/1
+Content-Type: application/json
+
+{
+  "name": "",
+  "price": -5000,
+  "imageUrl": ""
+}
+
+### 10. PUT 요청에서 잘못된 JSON 테스트
+### 상품 수정 시 JSON 파싱 실패
+PUT {{url}}/api/products/1
+Content-Type: application/json
+
+{
+  "name": "수정된 상품",
+  "price": invalid,
+  "imageUrl": "https://example.com/updated.jpg"
+}
+
+### 11. 정상 요청 - 상품 생성 (비교용)
+### ProblemDetail이 아닌 정상 응답 확인
+POST {{url}}/api/products
+Content-Type: application/json
+
+{
+  "name": "정상 상품",
+  "price": 5000,
+  "imageUrl": "https://example.com/normal-product.jpg"
+}
+
+### 12. 정상 요청 - 상품 조회 (비교용)
+### 생성된 상품 조회
+GET {{url}}/api/products/1
+
+### 13. 정상 요청 - 전체 상품 조회 (비교용)
+### 모든 상품 조회
+GET {{url}}/api/products
+
+### 14. 존재하지 않는 상품 조회 (404 - 비즈니스 로직)
+### GlobalExceptionHandler가 아닌 비즈니스 로직에서 처리
+GET {{url}}/api/products/999999
+
+### 15. 존재하지 않는 상품 수정 (404 - 비즈니스 로직)
+### GlobalExceptionHandler가 아닌 비즈니스 로직에서 처리
+PUT {{url}}/api/products/999999
+Content-Type: application/json
+
+{
+  "name": "존재하지 않는 상품",
+  "price": 1000,
+  "imageUrl": "https://example.com/nonexistent.jpg"
+}
+
+### 16. 존재하지 않는 상품 삭제 (404 - 비즈니스 로직)
+### GlobalExceptionHandler가 아닌 비즈니스 로직에서 처리
+DELETE {{url}}/api/products/999999
+
+### 참고사항:
+### - 모든 테스트는 실제 존재하는 Product API만 사용
+### - ProblemDetail (RFC 9457) 형식으로 응답
+### - ErrorResponse.builder()로 생성된 표준 형식
+### - updateAndGetBody()로 MessageSource 적용
+
+### 예상 ProblemDetail 응답 형식:
+### {
+###   "type": "about:blank",
+###   "title": "Bad Request",
+###   "status": 400,
+###   "detail": "검증에 실패했습니다",
+###   "instance": "/api/products",
+###   "code": "VALIDATION_FAILED",
+###   "errors": [
+###     {
+###       "type": "about:blank",
+###       "title": "Bad Request", 
+###       "status": 400,
+###       "detail": "상품 이름은 비어 있을 수 없습니다.",
+###       "field": "name",
+###       "rejected": ""
+###     }
+###   ],
+###   "path": "/api/products"
+### }

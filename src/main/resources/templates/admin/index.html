@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>관리자 페이지</title>
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        body {
+            display: block;
+        }
+        .main-container {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .section {
+            width: 45%;
+        }
+        #header {
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="header">
+    <h1>관리자 페이지</h1>
+    <div>
+        <a href="/" style="margin-right: 15px;">메인 페이지로</a>
+        <button id="logout-button">로그아웃</button>
+    </div>
+</div>
+
+<div class="main-container">
+    <div class="section">
+        <h2>상품 관리</h2>
+        <div class="form-container" style="width: 100%; margin-bottom: 20px;">
+            <form id="product-form">
+                <input id="product-id" type="hidden">
+                <div class="form-group">
+                    <label for="product-name">상품명</label>
+                    <input id="product-name" required type="text">
+                </div>
+                <div class="form-group">
+                    <label for="product-price">가격</label>
+                    <input id="product-price" required type="number">
+                </div>
+                <div class="form-group">
+                    <label for="product-imageUrl">이미지 URL</label>
+                    <input id="product-imageUrl" required type="text">
+                </div>
+
+                <hr>
+                <h5 style="margin-top: 10px;">옵션 관리</h5>
+                <div id="options-container">
+                </div>
+                <button id="add-option-btn" style="margin-top: 5px; margin-bottom: 15px; background-color: #6c757d; color: white; border: none; padding: 5px 10px; cursor: pointer;" type="button">옵션 필드 추가</button>
+                <hr>
+
+                <button type="submit">저장</button>
+                <button id="clear-form-button" style="background-color: #6c757d;" type="button">취소</button>
+            </form>
+        </div>
+        <table id="product-table">
+            <thead>
+                <tr>
+                    <th data-sort="id">ID</th>
+                    <th data-sort="name">상품명</th>
+                    <th data-sort="price">가격</th>
+                    <th>이미지</th>
+                    <th>옵션</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody id="product-list-body">
+            </tbody>
+        </table>
+        <div class="pagination" id="product-pagination"></div>
+    </div>
+    <div class="section">
+        <h2>회원 목록</h2>
+        <div id="member-list"></div>
+    </div>
+</div>
+
+<script src="/js/common.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html> 

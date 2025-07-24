@@ -1,0 +1,48 @@
+### 회원 가입
+POST http://localhost:8080/api/members/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### 로그인
+POST http://localhost:8080/api/members/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com", 
+  "password": "password123"
+}
+
+### 관리자 회원 목록 조회
+GET http://localhost:8080/api/admin/members
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QGV4YW1wbGUuY29tIiwibWVtYmVySWQiOjEsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5UeXBlIjoiYWNjZXNzIiwiaXNzIjoic3ByaW5nLWdpZnQtd2lzaGxpc3QiLCJhdWQiOiJzcHJpbmctZ2lmdC1hcGkiLCJpYXQiOjE3NTIwNDM0MjgsImV4cCI6MTc1MjA0NDMyOH0.y4w6Q4g83U_pveNOYStyWgjO21_8UcHf7m8VN9V8ekQ
+
+### 잘못된 이메일로 회원가입 테스트
+POST http://localhost:8080/api/members/register
+Content-Type: application/json
+
+{
+  "email": "invalid-email1",
+  "password": "password123"
+}
+
+### 중복 이메일로 회원가입 테스트
+POST http://localhost:8080/api/members/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### 잘못된 비밀번호로 로그인 테스트
+POST http://localhost:8080/api/members/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com", 
+  "password": "wrongpassword"
+} 
