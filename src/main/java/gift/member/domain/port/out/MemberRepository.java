@@ -9,6 +9,7 @@ public interface MemberRepository {
     Member save(Member member);
     Optional<Member> findByEmail(String email);
     Optional<Member> findById(Long id);
+    Optional<Member> findByKakaoId(Long kakaoId);
     boolean existsByEmail(String email);
     boolean existsById(Long id);
     List<Member> findAll();

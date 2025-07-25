@@ -1,8 +1,18 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const kakaoAuthCode = urlParams.get('code');
+
+    if (kakaoAuthCode) {
+        await handleKakaoLogin(kakaoAuthCode);
+        return;
+    }
+
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken || accessToken === 'undefined') {
         localStorage.removeItem('accessToken');
-        window.location.href = '/login';
+        if (window.location.pathname !== '/login') {
+            window.location.href = '/login';
+        }
         return;
     }
 
@@ -258,3 +268,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initializeApp();
 }); 
+
+async function handleKakaoLogin(code) {
+    try {
+        const response = await fetch(`/api/members/kakao/callback?code=${code}`);
+        if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem('accessToken', data.token);
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = '/';
+        } else {
+            console.error('카카오 로그인 실패:', await response.text());
+            alert('카카오 로그인에 실패했습니다.');
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        console.error('카카오 로그인 처리 중 오류 발생:', error);
+        alert('로그인 처리 중 오류가 발생했습니다.');
+        window.location.href = '/login';
+    }
+} 

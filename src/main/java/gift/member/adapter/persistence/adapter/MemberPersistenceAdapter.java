@@ -38,6 +38,12 @@ public class MemberPersistenceAdapter implements MemberRepository {
     }
 
     @Override
+    public Optional<Member> findByKakaoId(Long kakaoId) {
+        return memberJpaRepository.findByKakaoId(kakaoId)
+                .map(MemberEntityMapper::toDomain);
+    }
+
+    @Override
     public boolean existsByEmail(String email) {
         return memberJpaRepository.existsByEmail(email);
     }

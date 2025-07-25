@@ -7,10 +7,7 @@ import gift.member.application.port.in.dto.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/members")
@@ -31,6 +28,12 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = memberUseCase.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/kakao/callback")
+    public ResponseEntity<AuthResponse> kakaoLogin(@RequestParam("code") String code) {
+        AuthResponse response = memberUseCase.loginWithKakao(code);
         return ResponseEntity.ok(response);
     }
 } 
