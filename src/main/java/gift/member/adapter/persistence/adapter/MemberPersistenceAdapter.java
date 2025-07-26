@@ -64,4 +64,9 @@ public class MemberPersistenceAdapter implements MemberRepository {
     public void deleteById(Long id) {
         memberJpaRepository.deleteById(id);
     }
+
+    @Override
+    public void deleteAll() {
+        memberJpaRepository.deleteAll();
+    }
 } 

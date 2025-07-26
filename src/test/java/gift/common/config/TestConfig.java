@@ -18,7 +18,8 @@ public class TestConfig {
     @Configuration
     @ConditionalOnProperty(
             name = "admin.enabled",
-            havingValue = "true"
+            havingValue = "false",
+            matchIfMissing = true
     )
     public static class WebTestConfig implements WebMvcConfigurer {
     }

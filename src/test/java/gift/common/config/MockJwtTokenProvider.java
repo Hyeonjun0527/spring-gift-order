@@ -4,9 +4,15 @@ import gift.common.jwt.JwtTokenPort;
 import gift.common.jwt.JwtTokenProvider;
 import gift.member.domain.model.Role;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(
+        name = "jwt.enabled",
+        havingValue = "false",
+        matchIfMissing = true
+)
 public class MockJwtTokenProvider implements JwtTokenPort {
 
     @Override
