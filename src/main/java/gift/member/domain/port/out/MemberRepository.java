@@ -6,11 +6,21 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository {
-    Member save(Member member);
-    Optional<Member> findByEmail(String email);
-    Optional<Member> findById(Long id);
     boolean existsByEmail(String email);
-    boolean existsById(Long id);
+
+    Member save(Member member);
+
+    Optional<Member> findByEmail(String email);
+
+    Optional<Member> findByKakaoId(Long kakaoId);
+
     List<Member> findAll();
+
+    Optional<Member> findById(Long id);
+
+    boolean existsById(Long id);
+
     void deleteById(Long id);
+
+    void deleteAll();
 }

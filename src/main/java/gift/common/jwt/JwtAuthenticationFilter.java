@@ -39,6 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/favicon.ico",
             "/api/members/register",
             "/api/members/login",
+            "/api/members/kakao/callback",
             "/h2-console/**"
     );
     private final AntPathMatcher pathMatcher = new AntPathMatcher();

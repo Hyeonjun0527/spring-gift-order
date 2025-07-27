@@ -9,12 +9,13 @@ public class MemberEntityMapper {
         if (entity == null) {
             return null;
         }
-        return new Member(
+        return Member.of(
                 entity.getId(),
                 entity.getEmail(),
                 entity.getPassword(),
                 entity.getRole(),
-                entity.getCreatedAt()
+                entity.getCreatedAt(),
+                entity.getKakaoId()
         );
     }
 
@@ -27,7 +28,8 @@ public class MemberEntityMapper {
                 domain.email(),
                 domain.password(),
                 domain.role(),
-                domain.createdAt()
+                domain.createdAt(),
+                domain.kakaoId()
         );
     }
 } 

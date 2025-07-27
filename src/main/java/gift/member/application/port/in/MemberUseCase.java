@@ -9,6 +9,7 @@ public interface MemberUseCase {
 
     AuthResponse register(RegisterRequest request);
     AuthResponse login(LoginRequest request);
+    AuthResponse loginWithKakao(String code);
     List<Member> getAllMembers();
     Member createMember(CreateMemberRequest request);
     void updateMember(Long id, UpdateMemberRequest request);

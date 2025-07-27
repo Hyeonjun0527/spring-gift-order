@@ -152,4 +152,19 @@ document.addEventListener('DOMContentLoaded', () => {
             confirmInput.style.borderColor = '#e9ecef';
         }
     });
+
+    const kakaoLoginButton = document.getElementById('kakao-login-btn');
+    if (kakaoLoginButton) {
+        kakaoLoginButton.addEventListener('click', () => {
+            const clientId = kakaoLoginButton.dataset.clientId;
+            const redirectUri = kakaoLoginButton.dataset.redirectUri;
+            if (!clientId || !redirectUri) {
+                showError('카카오 로그인 설정이 올바르지 않습니다.');
+                return;
+            }
+            const scope = "profile_nickname,talk_message";
+            const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+            window.location.href = kakaoAuthUrl;
+        });
+    }
 }); 

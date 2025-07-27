@@ -54,6 +54,19 @@
                 </form>
             </div>
         </div>
+
+        <div class="social-login">
+            <div class="divider">
+                <span>OR</span>
+            </div>
+            <button class="social-button kakao" id="kakao-login-btn"
+                    th:data-client-id="${kakaoClientId}"
+                    th:data-redirect-uri="${kakaoRedirectUri}">
+                <img alt="Kakao Logo" src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png">
+                카카오로 로그인
+            </button>
+        </div>
+
     </div>
 
     <script src="/js/auth.js"></script>

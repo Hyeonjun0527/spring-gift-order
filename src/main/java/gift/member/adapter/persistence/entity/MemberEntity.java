@@ -17,7 +17,7 @@ public class MemberEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)
@@ -31,18 +31,22 @@ public class MemberEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(unique = true)
+    private Long kakaoId;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<WishEntity> wishes = new ArrayList<>();
 
     protected MemberEntity() {
     }
 
-    public MemberEntity(Long id, String email, String password, Role role, LocalDateTime createdAt) {
+    public MemberEntity(Long id, String email, String password, Role role, LocalDateTime createdAt, Long kakaoId) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
         this.createdAt = createdAt;
+        this.kakaoId = kakaoId;
     }
 
     public Long getId() {
@@ -63,6 +67,14 @@ public class MemberEntity {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public Long getKakaoId() {
+        return kakaoId;
+    }
+
+    public void setKakaoId(Long kakaoId) {
+        this.kakaoId = kakaoId;
     }
 
     public List<WishEntity> getWishes() {
