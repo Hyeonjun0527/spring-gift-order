@@ -2,8 +2,11 @@ package gift.product.adapter.persistence.adapter;
 
 import gift.common.annotation.Adapter;
 import gift.product.adapter.persistence.entity.ProductEntity;
+import gift.product.adapter.persistence.mapper.OptionEntityMapper;
 import gift.product.adapter.persistence.mapper.ProductEntityMapper;
+import gift.product.adapter.persistence.repository.OptionJpaRepository;
 import gift.product.adapter.persistence.repository.ProductJpaRepository;
+import gift.product.domain.model.Option;
 import gift.product.domain.model.Product;
 import gift.product.domain.port.out.ProductRepository;
 import jakarta.persistence.EntityManager;
@@ -21,9 +24,11 @@ public class ProductPersistenceAdapter implements ProductRepository {
     private final EntityManager entityManager;
 
     private final ProductJpaRepository productJpaRepository;
+    private final OptionJpaRepository optionJpaRepository;
 
-    public ProductPersistenceAdapter(ProductJpaRepository productJpaRepository, EntityManager entityManager) {
+    public ProductPersistenceAdapter(ProductJpaRepository productJpaRepository, OptionJpaRepository optionJpaRepository, EntityManager entityManager) {
         this.productJpaRepository = productJpaRepository;
+        this.optionJpaRepository = optionJpaRepository;
         this.entityManager = entityManager;
     }
 
@@ -37,6 +42,12 @@ public class ProductPersistenceAdapter implements ProductRepository {
     public Optional<Product> findById(Long id) {
         return productJpaRepository.findById(id)
                 .map(ProductEntityMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Option> findOptionById(Long optionId) {
+        return optionJpaRepository.findById(optionId)
+                .map(OptionEntityMapper::toDomain);
     }
 
     @Override
@@ -56,4 +67,4 @@ public class ProductPersistenceAdapter implements ProductRepository {
     public boolean existsById(Long id) {
         return productJpaRepository.existsById(id);
     }
-}
+} 
