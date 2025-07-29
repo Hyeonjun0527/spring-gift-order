@@ -55,7 +55,8 @@ public class ProductPersistenceAdapter implements ProductRepository {
     public Product save(Product product) {
         ProductEntity entity = ProductEntityMapper.toEntity(product);
         log.info("6 save productEntity: {}", entity);
-        ProductEntity mergedEntity = entityManager.merge(entity);
+//        ProductEntity mergedEntity = entityManager.merge(entity);
+        ProductEntity mergedEntity = productJpaRepository.save(entity);
         return ProductEntityMapper.toDomain(mergedEntity);
     }
 
@@ -64,7 +65,8 @@ public class ProductPersistenceAdapter implements ProductRepository {
         ProductEntity productEntity = productJpaRepository.findById(option.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("없는 상품입니다."));
         var optionEntity = OptionEntityMapper.toEntity(option, productEntity);
-        OptionEntity mergedEntity = entityManager.merge(optionEntity);
+        //OptionEntity mergedEntity = entityManager.merge(optionEntity);
+        OptionEntity mergedEntity = optionJpaRepository.save(optionEntity);
         return OptionEntityMapper.toDomain(mergedEntity);
     }
 

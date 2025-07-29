@@ -21,7 +21,7 @@ public class ClientConfig {
     @Bean
     public RestClient kakaoRestClient(RestTemplateBuilder builder) {
         RestTemplate restTemplate = builder
-                .connectTimeout(Duration.ofSeconds(3))
+                .connectTimeout(Duration.ofSeconds(7))
                 .readTimeout(Duration.ofSeconds(5))
             .build();
         return RestClient.create(restTemplate);
