@@ -3,8 +3,8 @@ package gift.product.adapter.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.product.application.port.in.ProductUseCase;
 import gift.product.application.port.in.dto.CreateProductRequest;
-import gift.product.application.port.in.dto.OptionRequest;
 import gift.product.application.port.in.dto.ProductResponse;
+import gift.product.application.port.in.dto.UpdateOptionRequest;
 import gift.product.application.port.in.dto.UpdateProductRequest;
 import gift.product.domain.model.Option;
 import gift.product.domain.model.Product;
@@ -128,7 +128,7 @@ class ProductControllerTest {
     void updateProduct() throws Exception {
         // given
         Long productId = 1L;
-        List<OptionRequest> optionRequests = List.of(new OptionRequest("Updated Option", 150));
+        List<UpdateOptionRequest> optionRequests = List.of(new UpdateOptionRequest(null,"Updated Option", 150));
         UpdateProductRequest request = new UpdateProductRequest("Updated Product", 150, "updated.jpg", optionRequests);
 
         // when
