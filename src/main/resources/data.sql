@@ -1,8 +1,8 @@
 -- 관리자 계정
 -- 이메일: admin@example.com
 -- 비밀번호: 1234
-INSERT INTO member (email, password, role, created_at, kakao_id) VALUES
-('admin@admin.com', 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ=', 'ADMIN', CURRENT_TIMESTAMP, NULL);
+INSERT INTO member (email, password, role, created_at, kakao_id, kakao_access_token, kakao_refresh_token) VALUES
+('admin@admin.com', 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ=', 'ADMIN', CURRENT_TIMESTAMP, NULL, NULL, NULL);
 
 -- 테스트용 상품 데이터
 INSERT INTO product (name, price, image_url) VALUES

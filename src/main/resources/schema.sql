@@ -1,6 +1,7 @@
 
 DROP TABLE IF EXISTS Wish;
-DROP TABLE IF EXISTS Option;
+DROP TABLE IF EXISTS "Order";
+DROP TABLE IF EXISTS "option";
 DROP TABLE IF EXISTS Product;
 DROP TABLE IF EXISTS Member;
 
@@ -11,7 +12,7 @@ CREATE TABLE Product(
     image_url VARCHAR(255)
 );
 
-CREATE TABLE Option(
+CREATE TABLE "option"(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     quantity INT NOT NULL,
@@ -26,7 +27,9 @@ CREATE TABLE Member(
     password VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL DEFAULT 'USER',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    kakao_id BIGINT UNIQUE
+    kakao_id BIGINT UNIQUE,
+    kakao_access_token VARCHAR(255),
+    kakao_refresh_token VARCHAR(255)
 );
 
 CREATE TABLE Wish (
@@ -40,4 +43,18 @@ CREATE TABLE Wish (
     FOREIGN KEY (member_id) REFERENCES Member(id),
     FOREIGN KEY (product_id) REFERENCES Product(id),
     UNIQUE (member_id, option_id)
+);
+
+CREATE TABLE "Order" (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    member_id BIGINT NOT NULL,
+    option_id BIGINT NOT NULL,
+    product_name VARCHAR(100) NOT NULL,
+    option_name VARCHAR(100) NOT NULL,
+    price INT NOT NULL,
+    quantity INT NOT NULL,
+    message VARCHAR(255),
+    order_date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (member_id) REFERENCES Member(id),
+    FOREIGN KEY (option_id) REFERENCES "option"(id)
 );

@@ -34,19 +34,25 @@ public class MemberEntity {
     @Column(unique = true)
     private Long kakaoId;
 
+    private String kakaoAccessToken;
+
+    private String kakaoRefreshToken;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<WishEntity> wishes = new ArrayList<>();
 
     protected MemberEntity() {
     }
 
-    public MemberEntity(Long id, String email, String password, Role role, LocalDateTime createdAt, Long kakaoId) {
+    public MemberEntity(Long id, String email, String password, Role role, LocalDateTime createdAt, Long kakaoId, String kakaoAccessToken, String kakaoRefreshToken) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
         this.createdAt = createdAt;
         this.kakaoId = kakaoId;
+        this.kakaoAccessToken = kakaoAccessToken;
+        this.kakaoRefreshToken = kakaoRefreshToken;
     }
 
     public Long getId() {
@@ -75,6 +81,14 @@ public class MemberEntity {
 
     public void setKakaoId(Long kakaoId) {
         this.kakaoId = kakaoId;
+    }
+
+    public String getKakaoAccessToken() {
+        return kakaoAccessToken;
+    }
+
+    public String getKakaoRefreshToken() {
+        return kakaoRefreshToken;
     }
 
     public List<WishEntity> getWishes() {

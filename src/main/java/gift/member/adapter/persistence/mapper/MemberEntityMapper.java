@@ -16,7 +16,7 @@ public class MemberEntityMapper {
                 entity.getRole(),
                 entity.getCreatedAt(),
                 entity.getKakaoId()
-        );
+        ).withKakaoTokens(entity.getKakaoAccessToken(), entity.getKakaoRefreshToken());
     }
 
     public static MemberEntity toEntity(Member domain) {
@@ -29,7 +29,9 @@ public class MemberEntityMapper {
                 domain.password(),
                 domain.role(),
                 domain.createdAt(),
-                domain.kakaoId()
+                domain.kakaoId(),
+                domain.kakaoAccessToken(),
+                domain.kakaoRefreshToken()
         );
     }
 } 

@@ -67,7 +67,10 @@ public class MemberInteractor implements MemberUseCase {
         Member member = memberRepository.findByKakaoId(userInfoResponse.id())
                 .orElseGet(() -> registerNewKakaoMember(userInfoResponse));
 
-        return createAuthResponse(member.id(), member.email(), member.role());
+        Member updatedMember = member.withKakaoTokens(tokenResponse.accessToken(), tokenResponse.refreshToken());
+        memberRepository.save(updatedMember);
+
+        return createAuthResponse(updatedMember.id(), updatedMember.email(), updatedMember.role());
     }
 
     private Member registerNewKakaoMember(KakaoUserInfoResponse userInfo) {
@@ -77,6 +80,7 @@ public class MemberInteractor implements MemberUseCase {
         Member newMember = Member.create(email, password)
                                  .withKakaoId(userInfo.id());
 
+        // registerNewKakaoMember에서는 토큰 정보를 저장하지 않음 (loginWithKakao에서 처리)
         return memberRepository.save(newMember);
     }
 
