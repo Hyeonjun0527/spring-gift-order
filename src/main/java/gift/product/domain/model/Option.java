@@ -38,13 +38,17 @@ public class Option {
         return quantity;
     }
 
-    public void subtractQuantity(int cnt) {
+    public void decreaseQuantity(int cnt) {
         if (this.quantity < cnt) {
             throw new ProductException("재고가 부족합니다.");
         }
         this.quantity-= cnt;
     }
 
+    public void update(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
     @Override
     public String toString() {
         return "Option{" +
