@@ -63,12 +63,12 @@ public class Product {
         return options;
     }
 
-    public void updateInfo(String name, int price, String imageUrl, List<Option> options) {
-        validateOptions(options);
+    public void updateInfo(String name, int price, String imageUrl, List<Option> newOptions) {
+        validateOptions(newOptions);
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.options = new ArrayList<>(options);
+        this.options = new ArrayList<>(newOptions);
     }
 
     @Override
@@ -78,6 +78,7 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", imageUrl='" + imageUrl + '\'' +
+                ", options=" + options +
                 '}';
     }
 }

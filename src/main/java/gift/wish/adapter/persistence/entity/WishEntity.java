@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(
         name = "wish",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "product_id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "option_id"})
 )
 public class WishEntity {
     @Id
@@ -25,6 +25,12 @@ public class WishEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
+    @Column(name = "option_id", nullable = false)
+    private Long optionId;
+
+    @Column(name = "option_name", nullable = false)
+    private String optionName;
+
     @Column(nullable = false)
     private int quantity;
 
@@ -34,19 +40,21 @@ public class WishEntity {
 
     protected WishEntity() {}
 
-    private WishEntity(Long id, MemberEntity member, ProductEntity product, int quantity) {
+    private WishEntity(Long id, MemberEntity member, ProductEntity product, Long optionId, String optionName, int quantity) {
         this.id = id;
         this.member = member;
         this.product = product;
+        this.optionId = optionId;
+        this.optionName = optionName;
         this.quantity = quantity;
     }
 
-    public static WishEntity create(MemberEntity member, ProductEntity product, int quantity) {
-        return new WishEntity(null, member, product, quantity);
+    public static WishEntity create(MemberEntity member, ProductEntity product, Long optionId, String optionName, int quantity) {
+        return new WishEntity(null, member, product, optionId, optionName, quantity);
     }
 
-    public static WishEntity of(Long id, MemberEntity member, ProductEntity product, int quantity) {
-        return new WishEntity(id, member, product, quantity);
+    public static WishEntity of(Long id, MemberEntity member, ProductEntity product, Long optionId, String optionName, int quantity) {
+        return new WishEntity(id, member, product, optionId, optionName, quantity);
     }
 
     public Long getId() {
@@ -55,6 +63,14 @@ public class WishEntity {
 
     private void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getOptionId() {
+        return optionId;
+    }
+
+    public String getOptionName() {
+        return optionName;
     }
 
     public int getQuantity() {

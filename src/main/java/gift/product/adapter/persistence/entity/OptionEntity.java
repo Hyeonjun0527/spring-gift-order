@@ -29,6 +29,11 @@ public class OptionEntity {
     protected OptionEntity() {
     }
 
+    public OptionEntity(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
     private OptionEntity(Long id, String name, int quantity, ProductEntity product) {
         this.id = id;
         this.name = name;
@@ -52,8 +57,25 @@ public class OptionEntity {
         return quantity;
     }
 
+    public void updateOption(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
     public ProductEntity getProduct() {
         return product;
     }
 
+    public void setProduct(ProductEntity product) {
+        this.product = product;
+    }
+
+    @Override
+    public String toString() {
+        return "OptionEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

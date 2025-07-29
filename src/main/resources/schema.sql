@@ -11,6 +11,15 @@ CREATE TABLE Product(
     image_url VARCHAR(255)
 );
 
+CREATE TABLE Option(
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    quantity INT NOT NULL,
+    product_id BIGINT,
+    FOREIGN KEY (product_id) REFERENCES Product(id),
+    UNIQUE (product_id, name)
+);
+
 CREATE TABLE Member(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(255) UNIQUE,
@@ -24,9 +33,11 @@ CREATE TABLE Wish (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
+    option_id BIGINT NOT NULL,
+    option_name VARCHAR(100) NOT NULL,
     quantity INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES Member(id),
     FOREIGN KEY (product_id) REFERENCES Product(id),
-    UNIQUE (member_id, product_id)
+    UNIQUE (member_id, option_id)
 );

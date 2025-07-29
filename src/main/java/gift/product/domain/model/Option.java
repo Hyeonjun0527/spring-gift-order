@@ -44,4 +44,14 @@ public class Option {
         }
         this.quantity-= cnt;
     }
+
+    @Override
+    public String toString() {
+        return "Option{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                '}';
+    }
 }
