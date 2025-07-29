@@ -3,7 +3,7 @@ package gift.member.application.usecase;
 import gift.common.exception.ForbiddenException;
 import gift.common.jwt.JwtTokenPort;
 import gift.common.security.PasswordEncoder;
-import gift.member.adapter.web.KakaoApiClient;
+import gift.infra.client.kakao.KakaoApiClient;
 import gift.member.application.port.in.MemberUseCase;
 import gift.member.application.port.in.dto.*;
 import gift.member.domain.model.Member;

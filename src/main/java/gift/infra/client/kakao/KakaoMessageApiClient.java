@@ -1,4 +1,4 @@
-package gift.order.adapter.web;
+package gift.infra.client.kakao;
 
 import gift.common.config.AppProperties;
 import gift.common.config.KakaoProperties;
@@ -9,6 +9,7 @@ import gift.product.domain.model.Option;
 import gift.product.domain.model.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -26,8 +27,10 @@ public class KakaoMessageApiClient implements KakaoMessagePort {
     private final KakaoProperties kakaoProperties;
     private final AppProperties appProperties;
 
-    public KakaoMessageApiClient(RestClient.Builder restClientBuilder, KakaoProperties kakaoProperties, AppProperties appProperties) {
-        this.restClient = restClientBuilder.build();
+    public KakaoMessageApiClient(@Qualifier("kakaoRestClient") RestClient restClient,
+        KakaoProperties kakaoProperties,
+        AppProperties appProperties) {
+        this.restClient = restClient;
         this.kakaoProperties = kakaoProperties;
         this.appProperties = appProperties;
     }
@@ -103,16 +106,16 @@ public class KakaoMessageApiClient implements KakaoMessagePort {
                     ]
                 }
                 """,
-                order.message(),
-                product.getImageUrl(),
-                baseUrl,
-                baseUrl,
-                product.getName(),
-                option.getName(),
-                order.quantity(),
-                (long) product.getPrice() * order.quantity(),
-                baseUrl,
-                baseUrl
+            order.message(),
+            product.getImageUrl(),
+            baseUrl,
+            baseUrl,
+            product.getName(),
+            option.getName(),
+            order.quantity(),
+            (long) product.getPrice() * order.quantity(),
+            baseUrl,
+            baseUrl
         );
     }
 } 
