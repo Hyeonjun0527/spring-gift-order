@@ -132,17 +132,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     productForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const id = productIdInput.value;
+        const id = parseInt(productIdInput.value,10) || undefined;
         const options = Array.from(optionsContainer.children).map(field => {
-            const nameInput = field.querySelector('.option-name');
-            const quantityInput = field.querySelector('.option-quantity');
+            const idStr  = field.querySelector('.option-id').value.trim();
+            const qtyStr = field.querySelector('.option-quantity').value.trim();
+
             return {
-                name: nameInput.value,
-                quantity: parseInt(quantityInput.value, 10)
+                id:        idStr  ? parseInt(idStr, 10)  : undefined,
+                name:      field.querySelector('.option-name').value.trim(),
+                quantity:  qtyStr ? parseInt(qtyStr, 10) : undefined
             };
         });
 
         const productData = {
+            id: id,
             name: productNameInput.value,
             price: parseInt(productPriceInput.value),
             imageUrl: productImageUrlInput.value,
@@ -152,13 +155,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const url = id ? `/api/products/${id}` : '/api/products';
         const method = id ? 'PUT' : 'POST';
 
+        console.log('Saving product:', productData);
+
         try {
             const response = await fetch(url, { method, headers, body: JSON.stringify(productData) });
             if (response.ok) {
+                console.log('Saving product:', productData);
                 alert('상품이 저장되었습니다.');
                 clearForm();
                 fetchProducts(state.currentProductPage);
             } else {
+                console.log('Saving product:', productData);
                 alert('저장 실패');
             }
         } catch (error) {
@@ -177,10 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     clearFormButton.addEventListener('click', clearForm);
 
-    function addOptionField(option = { name: '', quantity: 1 }) {
+    function addOptionField(option = { id : 1, name: '', quantity: 1 }) {
         const optionField = document.createElement('div');
         optionField.classList.add('option-field');
         optionField.innerHTML = `
+            <input type="hidden" class="option-id" value="${option.id || ''}">
             <input type="text" class="option-name" placeholder="옵션명" value="${option.name}" required style="width: 60%;">
             <input type="number" class="option-quantity" placeholder="수량" value="${option.quantity}" min="1" required style="width: 25%;">
             <button type="button" class="remove-option-btn" style="width: 10%;">삭제</button>

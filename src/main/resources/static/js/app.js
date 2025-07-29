@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoutButton = document.getElementById('logout-button');
     const addProductForm = document.getElementById('add-product-form');
     const adminLink = document.getElementById('admin-link');
+    const addOptionButton = document.getElementById('add-option-btn');
+    const optionsContainer = document.getElementById('options-container');
 
     let currentProductPage = 0;
     let currentWishPage = 0;
@@ -110,11 +112,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         products.forEach(product => {
             const item = document.createElement('div');
             item.className = 'product-item';
+            
+            const optionsHtml = product.options.length > 0
+                ? `<select id="option-select-${product.id}">
+                        ${product.options.map(option => `<option value="${option.id}">${option.name} (${option.quantity}개 남음)</option>`).join('')}
+                   </select>`
+                : '<span>옵션 없음</span>';
+
             item.innerHTML = `
                 <div>
                     <strong>${product.name}</strong> - ${product.price}원
                 </div>
-                <button onclick="addWish(${product.id})">위시리스트에 추가</button>
+                <div class="product-controls">
+                    ${optionsHtml}
+                    <button ${product.options.length === 0 ? 'disabled' : ''} onclick="addWish(${product.id})">위시리스트에 추가</button>
+                </div>
             `;
             productList.appendChild(item);
         });
@@ -127,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             item.className = 'wish-item';
             item.innerHTML = `
                 <div>
-                    <strong>${wish.productName}</strong> - ${wish.productPrice}원
+                    <strong>${wish.productName}</strong> (${wish.optionName}) - ${wish.productPrice}원
                 </div>
                 <div>
                     <input type="number" value="${wish.quantity}" min="1" onchange="updateWishQuantity(${wish.wishId}, this.value)">
@@ -160,14 +172,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     */
 
+    addOptionButton.addEventListener('click', () => {
+        const optionRow = document.createElement('div');
+        optionRow.className = 'option-row';
+        optionRow.innerHTML = `
+            <input type="hidden" name="optionId" class="option-id" value="">
+            <input type="text" placeholder="옵션명 (예: L 사이즈)" class="option-name" required>
+            <input type="number" placeholder="수량" class="option-quantity" required min="1">
+            <button type="button" onclick="this.parentElement.remove()">×</button>
+        `;
+        optionsContainer.appendChild(optionRow);
+    });
+
     addProductForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
+        const optionRows = optionsContainer.querySelectorAll('.option-row');
+        const options = Array.from(optionRows).map(row => ({
+            id : row.querySelector('.option-id').value ? parseInt(row.querySelector('.option-id').value) : null,
+            name: row.querySelector('.option-name').value,
+            quantity: parseInt(row.querySelector('.option-quantity').value)
+        }));
+
         const imageUrl = document.getElementById('product-imageUrl').value.trim();
         const productData = {
             name: document.getElementById('product-name').value,
             price: parseInt(document.getElementById('product-price').value),
-            imageUrl: imageUrl || null
+            imageUrl: imageUrl || null,
+            options: options
         };
 
         try {
@@ -180,6 +212,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (response.ok) {
                 alert('상품이 추가되었습니다.');
                 addProductForm.reset();
+                optionsContainer.innerHTML = '<h4>옵션</h4>'; // 옵션 필드 초기화
                 fetchProducts(0);
             } else {
                 const errorData = await response.json();
@@ -199,17 +232,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     window.addWish = async (productId) => {
+        const optionSelect = document.getElementById(`option-select-${productId}`);
+        const optionId = optionSelect.value;
+        
         try {
             const response = await fetch('/api/wishes', {
                 method: 'POST',
                 headers,
-                body: JSON.stringify({ productId: productId, quantity: 1 })
+                body: JSON.stringify({ optionId: parseInt(optionId), quantity: 1 })
             });
             if (response.ok) {
                 alert('위시리스트에 추가되었습니다.');
                 fetchWishes(currentWishPage);
             } else {
-                alert('추가 실패');
+                const errorData = await response.json();
+                alert(errorData.message || '추가 실패');
             }
         } catch (error) {
             console.error('Error adding wish:', error);
