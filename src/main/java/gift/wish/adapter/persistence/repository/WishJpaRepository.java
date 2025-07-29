@@ -9,10 +9,11 @@ import java.util.Optional;
 
 public interface WishJpaRepository extends JpaRepository<WishEntity, Long> {
 
-    Page<WishEntity> findByMemberId(Long memberId, Pageable pageable);
+    Page<WishEntity> findAllByMemberId(Long memberId, Pageable pageable);
 
     Optional<WishEntity> findByMemberIdAndProductId(Long memberId, Long productId);
 
     Optional<WishEntity> findByMemberIdAndOptionId(Long memberId, Long optionId);
 
+    void deleteByMemberIdAndOptionId(Long memberId, Long optionId);
 }

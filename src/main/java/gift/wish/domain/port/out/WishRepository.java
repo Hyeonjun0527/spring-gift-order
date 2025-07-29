@@ -16,4 +16,6 @@ public interface WishRepository {
     Optional<Wish> findById(Long id);
 
     void deleteById(Long id);
+
+    void deleteByMemberIdAndOptionId(Long memberId, Long optionId);
 }

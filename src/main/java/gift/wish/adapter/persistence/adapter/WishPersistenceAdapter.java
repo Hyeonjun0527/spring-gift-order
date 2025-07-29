@@ -23,7 +23,8 @@ public class WishPersistenceAdapter implements WishRepository {
 
     @Override
     public Page<Wish> findByMemberId(Long memberId, Pageable pageable) {
-        return wishJpaRepository.findByMemberId(memberId, pageable).map(WishEntityMapper::toDomain);
+        return wishJpaRepository.findAllByMemberId(memberId, pageable)
+                .map(WishEntityMapper::toDomain);
     }
 
     @Override
@@ -46,5 +47,11 @@ public class WishPersistenceAdapter implements WishRepository {
     @Override
     public void deleteById(Long id) {
         wishJpaRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByMemberIdAndOptionId(Long memberId, Long optionId) {
+        wishJpaRepository.deleteByMemberIdAndOptionId(memberId, optionId);
     }
 }
