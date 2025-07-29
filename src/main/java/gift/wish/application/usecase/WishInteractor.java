@@ -3,7 +3,9 @@ package gift.wish.application.usecase;
 import gift.common.exception.UnauthorizedException;
 import gift.member.domain.model.Member;
 import gift.member.domain.port.out.MemberRepository;
+import gift.product.domain.model.Option;
 import gift.product.domain.model.Product;
+import gift.product.domain.port.out.OptionRepository;
 import gift.product.domain.port.out.ProductRepository;
 import gift.wish.application.port.in.WishUseCase;
 import gift.wish.application.port.in.dto.WishAddRequest;
@@ -20,11 +22,13 @@ public class WishInteractor implements WishUseCase {
 
     private final WishRepository wishRepository;
     private final MemberRepository memberRepository;
+    private final OptionRepository optionRepository;
     private final ProductRepository productRepository;
 
-    public WishInteractor(WishRepository wishRepository, MemberRepository memberRepository, ProductRepository productRepository) {
+    public WishInteractor(WishRepository wishRepository, MemberRepository memberRepository, OptionRepository optionRepository, ProductRepository productRepository) {
         this.wishRepository = wishRepository;
         this.memberRepository = memberRepository;
+        this.optionRepository = optionRepository;
         this.productRepository = productRepository;
     }
 
@@ -36,17 +40,24 @@ public class WishInteractor implements WishUseCase {
 
     @Override
     public Wish addWish(WishAddRequest request, Long memberId) {
-        return wishRepository.findByMemberIdAndProductId(memberId, request.productId())
+        Option option = optionRepository.findById(request.optionId())
+                .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
+
+        return wishRepository.findByMemberIdAndOptionId(memberId, request.optionId())
                 .map(existingWish -> {
+                    // 이미 위시리스트에 해당 옵션이 있으면 수량만 더해줌
                     existingWish.updateQuantity(existingWish.getQuantity() + request.quantity());
                     return wishRepository.save(existingWish);
                 })
                 .orElseGet(() -> {
+                    // 새로운 위시 아이템 추가
                     Member member = memberRepository.findById(memberId)
                             .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
-                    Product product = productRepository.findById(request.productId())
+
+                    Product product = productRepository.findById(option.getProductId())
                             .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
-                    Wish newWish = Wish.of(null, member, product, request.quantity());
+
+                    Wish newWish = Wish.of(null, member, product, option.getId(), option.getName(), request.quantity());
                     return wishRepository.save(newWish);
                 });
     }

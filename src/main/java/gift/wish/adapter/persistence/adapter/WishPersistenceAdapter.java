@@ -3,6 +3,7 @@ package gift.wish.adapter.persistence.adapter;
 import gift.common.annotation.Adapter;
 import gift.wish.adapter.persistence.entity.WishEntity;
 import gift.wish.adapter.persistence.mapper.WishEntityMapper;
+import gift.wish.adapter.persistence.repository.WishJpaRepository;
 import gift.wish.domain.model.Wish;
 import gift.wish.domain.port.out.WishRepository;
 import org.springframework.data.domain.Page;
@@ -22,8 +23,12 @@ public class WishPersistenceAdapter implements WishRepository {
 
     @Override
     public Page<Wish> findByMemberId(Long memberId, Pageable pageable) {
-        Page<WishEntity> entities = wishJpaRepository.findByMemberId(memberId, pageable);
-        return entities.map(WishEntityMapper::toDomain);
+        return wishJpaRepository.findByMemberId(memberId, pageable).map(WishEntityMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Wish> findByMemberIdAndOptionId(Long memberId, Long optionId) {
+        return wishJpaRepository.findByMemberIdAndOptionId(memberId, optionId).map(WishEntityMapper::toDomain);
     }
 
     @Override
@@ -41,10 +46,5 @@ public class WishPersistenceAdapter implements WishRepository {
     @Override
     public void deleteById(Long id) {
         wishJpaRepository.deleteById(id);
-    }
-
-    @Override
-    public Optional<Wish> findByMemberIdAndProductId(Long memberId, Long productId) {
-        return wishJpaRepository.findByMemberIdAndProductId(memberId, productId).map(WishEntityMapper::toDomain);
     }
 }

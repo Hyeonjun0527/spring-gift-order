@@ -8,12 +8,12 @@ import java.util.Optional;
 
 public interface WishRepository {
     Page<Wish> findByMemberId(Long memberId, Pageable pageable);
+    
+    Optional<Wish> findByMemberIdAndOptionId(Long memberId, Long optionId);
 
     Wish save(Wish wish);
 
     Optional<Wish> findById(Long id);
 
     void deleteById(Long id);
-
-    Optional<Wish> findByMemberIdAndProductId(Long memberId, Long productId);
 }

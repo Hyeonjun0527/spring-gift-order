@@ -21,6 +21,6 @@ public record UpdateProductRequest(
         String imageUrl,
 
         @NotEmpty(message = "상품에는 하나 이상의 옵션이 있어야 합니다.")
-        List<@Valid OptionRequest> options
+        List<@Valid UpdateOptionRequest> options
 ) {
 } 

@@ -6,6 +6,9 @@ import gift.product.adapter.persistence.mapper.ProductEntityMapper;
 import gift.product.adapter.persistence.repository.ProductJpaRepository;
 import gift.product.domain.model.Product;
 import gift.product.domain.port.out.ProductRepository;
+import jakarta.persistence.EntityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,10 +17,14 @@ import java.util.Optional;
 @Adapter
 public class ProductPersistenceAdapter implements ProductRepository {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductPersistenceAdapter.class);
+    private final EntityManager entityManager;
+
     private final ProductJpaRepository productJpaRepository;
 
-    public ProductPersistenceAdapter(ProductJpaRepository productJpaRepository) {
+    public ProductPersistenceAdapter(ProductJpaRepository productJpaRepository, EntityManager entityManager) {
         this.productJpaRepository = productJpaRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -35,8 +42,9 @@ public class ProductPersistenceAdapter implements ProductRepository {
     @Override
     public Product save(Product product) {
         ProductEntity entity = ProductEntityMapper.toEntity(product);
-        ProductEntity save = productJpaRepository.save(entity);
-        return ProductEntityMapper.toDomain(save);
+        log.info("6 save productEntity: {}", entity);
+        ProductEntity mergedEntity = entityManager.merge(entity);
+        return ProductEntityMapper.toDomain(mergedEntity);
     }
 
     @Override
