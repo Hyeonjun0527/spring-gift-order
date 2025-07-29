@@ -1,6 +1,7 @@
 package gift.product.adapter.persistence.adapter;
 
 import gift.common.annotation.Adapter;
+import gift.product.adapter.persistence.entity.OptionEntity;
 import gift.product.adapter.persistence.entity.ProductEntity;
 import gift.product.adapter.persistence.mapper.OptionEntityMapper;
 import gift.product.adapter.persistence.mapper.ProductEntityMapper;
@@ -56,6 +57,15 @@ public class ProductPersistenceAdapter implements ProductRepository {
         log.info("6 save productEntity: {}", entity);
         ProductEntity mergedEntity = entityManager.merge(entity);
         return ProductEntityMapper.toDomain(mergedEntity);
+    }
+
+    @Override
+    public Option saveOption(Option option) {
+        ProductEntity productEntity = productJpaRepository.findById(option.getProductId())
+                .orElseThrow(() -> new IllegalArgumentException("없는 상품입니다."));
+        var optionEntity = OptionEntityMapper.toEntity(option, productEntity);
+        OptionEntity mergedEntity = entityManager.merge(optionEntity);
+        return OptionEntityMapper.toDomain(mergedEntity);
     }
 
     @Override

@@ -23,12 +23,9 @@ public class OrderPersistenceAdapter implements OrderRepository {
 
     @Override
     public Order save(Order order) {
-        // 1. ID를 사용하여 영속성 컨텍스트로부터 엔티티의 '프록시(참조)'를 가져옵니다.
-        // 이 방식은 실제 SELECT 쿼리를 날리지 않고도 연관관계를 설정할 수 있게 해줍니다.
         MemberEntity memberEntityProxy = entityManager.getReference(MemberEntity.class, order.memberId());
         OptionEntity optionEntityProxy = entityManager.getReference(OptionEntity.class, order.optionId());
 
-        // 2. 프록시를 사용하여 완전한 OrderEntity를 생성하고 저장합니다.
         OrderEntity orderEntity = OrderEntityMapper.toEntity(order, memberEntityProxy, optionEntityProxy);
         OrderEntity savedEntity = orderJpaRepository.save(orderEntity);
         return OrderEntityMapper.toDomain(savedEntity);

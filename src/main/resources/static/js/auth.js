@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('accessToken', data.token);
+                localStorage.setItem('userRole', data.role); // 역할 정보 저장
                 showSuccess('로그인 성공! 메인 페이지로 이동합니다.');
                 
                 setTimeout(() => {

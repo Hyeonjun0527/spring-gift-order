@@ -49,7 +49,7 @@ public class OrderInteractor implements OrderUseCase {
 
         // 2. 재고 차감
         option.decreaseQuantity(request.quantity());
-        productRepository.save(product); // 변경된 재고 상태 저장
+        productRepository.saveOption(option); // 변경된 재고 상태 저장
 
         // 3. 주문 생성 및 저장
         Order order = Order.create(

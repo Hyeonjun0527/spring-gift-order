@@ -137,6 +137,6 @@ public class MemberInteractor implements MemberUseCase {
 
     private AuthResponse createAuthResponse(Long memberId, String email, gift.member.domain.model.Role role) {
         String accessToken = jwtTokenPort.createAccessToken(memberId, email, role);
-        return new AuthResponse(accessToken);
+        return new AuthResponse(accessToken, role.name());
     }
 }

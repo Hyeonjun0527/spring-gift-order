@@ -1,4 +1,7 @@
 package gift.member.application.port.in.dto;
 
-public record AuthResponse(String token) {
+public record AuthResponse(
+        String token,
+        String role
+) {
 } 

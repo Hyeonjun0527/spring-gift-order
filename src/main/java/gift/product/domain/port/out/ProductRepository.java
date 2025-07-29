@@ -17,6 +17,8 @@ public interface ProductRepository {
 
     Product save(Product product);
 
+    Option saveOption(Option option);
+
     void deleteById(Long id);
 
     boolean existsById(Long id);

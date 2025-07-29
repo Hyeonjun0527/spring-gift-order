@@ -114,6 +114,14 @@
         .product-controls select {
             flex: 1;
         }
+        .wish-controls {
+            margin-bottom: 10px;
+        }
+        .wish-controls textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -155,7 +163,11 @@
         <div class="pagination" id="product-pagination"><!-- 동적 추가 --></div>
     </div>
     <div class="section">
-        <h2>내 위시리스트</h2>
+        <h2>위시리스트</h2>
+        <div class="wish-controls">
+            <label for="order-message">주문 메시지:</label>
+            <textarea id="order-message" placeholder="수령인에게 보낼 메시지를 입력하세요."></textarea>
+        </div>
         <div id="wish-list"><!-- 동적 추가 --></div>
         <div class="pagination" id="wish-pagination"><!-- 동적 추가 --></div>
     </div>

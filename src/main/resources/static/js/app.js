@@ -52,18 +52,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    const checkUserRole = async () => {
-        try {
-            const response = await fetch('/api/admin/members', { headers });
-            if (response.ok) {
-                userRole = 'ADMIN';
-                adminLink.style.display = 'inline-block';
-            } else {
-                userRole = 'USER';
-                adminLink.style.display = 'none';
-            }
-        } catch (error) {
-            userRole = 'USER';
+    const checkUserRole = () => {
+        const userRole = localStorage.getItem('userRole');
+        if (userRole === 'ADMIN') {
+            adminLink.style.display = 'inline-block';
+        } else {
             adminLink.style.display = 'none';
         }
     };
@@ -141,16 +134,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div>
                     <strong>${wish.productName}</strong> (${wish.optionName}) - ${wish.productPrice}원
                 </div>
-                <div>
-                    <input type="number" value="${wish.quantity}" min="1" onchange="updateWishQuantity(${wish.wishId}, this.value)">
+                <div class="wish-item-controls">
+                    <input type="number" value="${wish.quantity}" min="1" onchange="updateWishQuantity(${wish.wishId}, this.value)" style="width: 50px;">
+                    <button onclick="placeOrder(${wish.optionId}, this.previousElementSibling.value)">주문하기</button>
                     <button onclick="deleteWish(${wish.wishId})">삭제</button>
-                </div>
-            `;
+                </div>`;
             wishList.appendChild(item);
         });
     };
 
-    /*
     const renderPagination = (container, pageData, fetchFunction) => {
         container.innerHTML = '';
         if (pageData.totalPages > 1) {
@@ -170,7 +162,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     };
-    */
 
     addOptionButton.addEventListener('click', () => {
         const optionRow = document.createElement('div');
@@ -212,7 +203,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (response.ok) {
                 alert('상품이 추가되었습니다.');
                 addProductForm.reset();
-                optionsContainer.innerHTML = '<h4>옵션</h4>'; // 옵션 필드 초기화
+                optionsContainer.innerHTML = '<h4>옵션</h4>'; 
                 fetchProducts(0);
             } else {
                 const errorData = await response.json();
@@ -261,7 +252,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 body: JSON.stringify({ quantity: parseInt(quantity) })
             });
             if (response.ok) {
-                alert('수량이 변경되었습니다.');
                 fetchWishes(currentWishPage);
             } else {
                 alert('수량 변경 실패');
@@ -288,6 +278,37 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Error deleting wish:', error);
         }
     };
+
+    window.placeOrder = async (optionId, quantity) => {
+        const messageInput = document.getElementById('order-message');
+        const message = messageInput.value.trim();
+
+        if (!confirm(`주문하시겠습니까?`)) return;
+
+        try {
+            const response = await fetch('/api/orders', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    optionId: optionId,
+                    quantity: parseInt(quantity, 10),
+                    message: message
+                })
+            });
+
+            if (response.status === 201) {
+                alert('주문이 완료되었습니다! 카카오톡 메시지를 확인해주세요.');
+                messageInput.value = ''; // 메시지 입력란 초기화
+                await fetchWishes(); // 위시리스트 갱신
+            } else {
+                const errorData = await response.json();
+                alert(errorData.detail || '주문에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('주문 처리 중 오류 발생:', error);
+            alert('주문 처리 중 오류가 발생했습니다.');
+        }
+    };
     
     logoutButton.addEventListener('click', () => {
         localStorage.removeItem('accessToken');
@@ -312,6 +333,7 @@ async function handleKakaoLogin(code) {
         if (response.ok) {
             const data = await response.json();
             localStorage.setItem('accessToken', data.token);
+            localStorage.setItem('userRole', data.role); // 역할 정보 저장
             window.history.replaceState({}, document.title, "/");
             window.location.href = '/';
         } else {

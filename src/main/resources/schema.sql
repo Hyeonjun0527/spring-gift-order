@@ -1,5 +1,5 @@
 
-DROP TABLE IF EXISTS "Order";
+DROP TABLE IF EXISTS "order";
 DROP TABLE IF EXISTS Wish;
 DROP TABLE IF EXISTS Option;
 DROP TABLE IF EXISTS Product;
@@ -46,7 +46,7 @@ CREATE TABLE Wish (
     UNIQUE (member_id, option_id)
 );
 
-CREATE TABLE "Order" (
+CREATE TABLE "order" (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     member_id BIGINT NOT NULL,
     option_id BIGINT NOT NULL,
