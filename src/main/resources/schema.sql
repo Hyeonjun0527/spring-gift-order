@@ -29,8 +29,8 @@ CREATE TABLE Member(
     role VARCHAR(20) NOT NULL DEFAULT 'USER',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     kakao_id BIGINT UNIQUE,
-    kakao_access_token VARCHAR(255),
-    kakao_refresh_token VARCHAR(255)
+    access_token VARCHAR(255),
+    refresh_token VARCHAR(255)
 );
 
 CREATE TABLE Wish (
