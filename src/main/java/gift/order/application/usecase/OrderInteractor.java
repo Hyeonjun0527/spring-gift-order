@@ -2,7 +2,7 @@ package gift.order.application.usecase;
 
 import gift.member.domain.model.Member;
 import gift.member.domain.port.out.MemberRepository;
-import gift.notification.application.port.out.NotificationPort;
+import gift.order.application.event.OrderCompletedEvent;
 import gift.order.application.port.in.OrderUseCase;
 import gift.order.application.port.in.dto.OrderResponse;
 import gift.order.application.port.in.dto.PlaceOrderRequest;
@@ -12,6 +12,7 @@ import gift.product.domain.model.Option;
 import gift.product.domain.model.Product;
 import gift.product.domain.port.out.ProductRepository;
 import gift.wish.domain.port.out.WishRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,16 +25,16 @@ public class OrderInteractor implements OrderUseCase {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final WishRepository wishRepository;
-    private final NotificationPort notificationPort;
+    private final ApplicationEventPublisher eventPublisher;
 
     public OrderInteractor(OrderRepository orderRepository, MemberRepository memberRepository,
         ProductRepository productRepository, WishRepository wishRepository,
-        NotificationPort notificationPort) {
+        ApplicationEventPublisher eventPublisher) {
         this.orderRepository = orderRepository;
         this.memberRepository = memberRepository;
         this.productRepository = productRepository;
         this.wishRepository = wishRepository;
-        this.notificationPort = notificationPort;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -68,8 +69,8 @@ public class OrderInteractor implements OrderUseCase {
         // 4. 위시리스트에서 해당 상품 삭제
         wishRepository.deleteByMemberIdAndOptionId(memberId, request.optionId());
 
-        // 5. 알림 포트를 통해 주문 완료 메시지 발송 요청 (비동기)
-        notificationPort.sendOrderConfirmationAsync(memberId, savedOrder.id());
+        // 5. 주문 완료 이벤트 발행
+        eventPublisher.publishEvent(new OrderCompletedEvent(savedOrder.id(), memberId));
 
         return OrderResponse.from(savedOrder);
     }
