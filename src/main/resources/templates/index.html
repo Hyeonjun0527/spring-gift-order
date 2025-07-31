@@ -68,6 +68,60 @@
         #admin-link:hover {
             background-color: #5a6268;
         }
+        #options-container {
+            margin-top: 15px;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            border-left: 3px solid #eee;
+        }
+        .option-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .option-row input {
+            flex: 1; /* 남은 공간을 차지하도록 설정 */
+        }
+        .option-row button {
+            flex: 0 0 auto; /* flex-grow: 0, flex-shrink: 0, flex-basis: auto */
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .option-row button:hover {
+            background-color: #c82333;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            margin-bottom: 15px;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .product-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .product-controls select {
+            flex: 1;
+        }
+        .wish-controls {
+            margin-bottom: 10px;
+        }
+        .wish-controls textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -94,17 +148,28 @@
                 <div class="form-row">
                     <input id="product-imageUrl" placeholder="이미지 URL (선택)" type="text">
                 </div>
+                
+                <div id="options-container">
+                    <h4>옵션</h4>
+                    
+                </div>
+                <button class="btn-secondary" id="add-option-btn" type="button">옵션 추가</button>
+
                 <button class="add-product-btn" type="submit">상품 추가</button>
             </form>
         </div>
         
-        <div id="product-list"></div>
-        <div class="pagination" id="product-pagination"></div>
+        <div id="product-list"><!-- 동적 추가 --></div>
+        <div class="pagination" id="product-pagination"><!-- 동적 추가 --></div>
     </div>
     <div class="section">
-        <h2>내 위시리스트</h2>
-        <div id="wish-list"></div>
-        <div class="pagination" id="wish-pagination"></div>
+        <h2>위시리스트</h2>
+        <div class="wish-controls">
+            <label for="order-message">주문 메시지:</label>
+            <textarea id="order-message" placeholder="수령인에게 보낼 메시지를 입력하세요."></textarea>
+        </div>
+        <div id="wish-list"><!-- 동적 추가 --></div>
+        <div class="pagination" id="wish-pagination"><!-- 동적 추가 --></div>
     </div>
 </div>
 

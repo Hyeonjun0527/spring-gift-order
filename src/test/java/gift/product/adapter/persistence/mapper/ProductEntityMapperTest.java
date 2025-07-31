@@ -14,7 +14,7 @@ class ProductEntityMapperTest {
     @Test
     @DisplayName("ProductEntity -> Product 변환")
     void toDomain() {
-        ProductEntity entity = ProductEntity.of( "A", 100, "a.jpg");
+        ProductEntity entity = ProductEntity.of(1L,"A", 100, "a.jpg", List.of());
         Product domain = ProductEntityMapper.toDomain(entity);
         assertThat(domain.getName()).isEqualTo("A");
         assertThat(domain.getPrice()).isEqualTo(100);

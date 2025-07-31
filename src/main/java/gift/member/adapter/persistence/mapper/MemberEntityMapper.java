@@ -1,6 +1,8 @@
 package gift.member.adapter.persistence.mapper;
 
+import gift.member.adapter.persistence.entity.KakaoInfoEmbeddable;
 import gift.member.adapter.persistence.entity.MemberEntity;
+import gift.member.domain.model.KakaoInfo;
 import gift.member.domain.model.Member;
 
 public class MemberEntityMapper {
@@ -15,7 +17,7 @@ public class MemberEntityMapper {
                 entity.getPassword(),
                 entity.getRole(),
                 entity.getCreatedAt(),
-                entity.getKakaoId()
+                toKakaoInfoDomain(entity.getKakaoInfo())
         );
     }
 
@@ -29,7 +31,29 @@ public class MemberEntityMapper {
                 domain.password(),
                 domain.role(),
                 domain.createdAt(),
-                domain.kakaoId()
+                toKakaoInfoEntity(domain.kakaoInfo())
+        );
+    }
+
+    private static KakaoInfo toKakaoInfoDomain(KakaoInfoEmbeddable embeddable) {
+        if (embeddable == null) {
+            return null;
+        }
+        return new KakaoInfo(
+                embeddable.getKakaoId(),
+                embeddable.getAccessToken(),
+                embeddable.getRefreshToken()
+        );
+    }
+
+    private static KakaoInfoEmbeddable toKakaoInfoEntity(KakaoInfo domain) {
+        if (domain == null) {
+            return null;
+        }
+        return new KakaoInfoEmbeddable(
+                domain.kakaoId(),
+                domain.accessToken(),
+                domain.refreshToken()
         );
     }
 } 

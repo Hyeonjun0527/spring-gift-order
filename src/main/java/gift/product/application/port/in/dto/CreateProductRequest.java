@@ -1,5 +1,6 @@
 package gift.product.application.port.in.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.List;
@@ -19,10 +20,10 @@ public record CreateProductRequest(
 
         String imageUrl,
 
-        List<OptionRequest> optionRequests
+        List<@Valid CreateOptionRequest> options
 ) {
 
-        public static CreateProductRequest of(String name, int price, String imageUrl, List<OptionRequest> optionRequests) {
-                return new CreateProductRequest(name, price, imageUrl, optionRequests);
+        public static CreateProductRequest of(String name, int price, String imageUrl, List<CreateOptionRequest> options) {
+                return new CreateProductRequest(name, price, imageUrl, options);
         }
 }

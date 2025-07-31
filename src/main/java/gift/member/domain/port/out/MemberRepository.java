@@ -12,7 +12,7 @@ public interface MemberRepository {
 
     Optional<Member> findByEmail(String email);
 
-    Optional<Member> findByKakaoId(Long kakaoId);
+    Optional<Member> findByKakaoInfoKakaoId(Long kakaoId);
 
     List<Member> findAll();
 

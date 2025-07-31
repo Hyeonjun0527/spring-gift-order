@@ -1,9 +1,6 @@
 package gift.product.adapter.persistence.entity;
 
-import gift.product.application.port.in.dto.CreateProductRequest;
-import gift.product.application.port.in.dto.OptionRequest;
-import gift.product.application.port.in.dto.ProductResponse;
-import gift.product.application.port.in.dto.UpdateProductRequest;
+import gift.product.application.port.in.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +44,7 @@ public class ProductTest {
     @DisplayName("유효한 상품 정보를 등록하면 CREATED 상태코드와 Location 헤더를 반환한다")
     void CREATE() {
         // given
-        List<OptionRequest> options = List.of(new OptionRequest("기본 옵션", 10));
+        List<CreateOptionRequest> options = List.of(new CreateOptionRequest("기본 옵션", 10));
         CreateProductRequest productRequest = new CreateProductRequest(NAME, PRICE, IMAGE_URL, options);
 
         // when
@@ -85,7 +82,7 @@ public class ProductTest {
     void UPDATE() {
         // given
         URI location = createProductURI();
-        List<OptionRequest> updatedOptions = List.of(new OptionRequest("수정된 옵션", 20));
+        List<UpdateOptionRequest> updatedOptions = List.of(new UpdateOptionRequest(null, "수정된 옵션", 20));
         UpdateProductRequest updateRequest = new UpdateProductRequest("수정된 프로덕트", 2000, "https://new.img.url", updatedOptions);
 
         // when
@@ -121,11 +118,11 @@ public class ProductTest {
                         .uri(location)
                         .retrieve()
                         .toBodilessEntity())
-                .isInstanceOf(HttpClientErrorException.BadRequest.class);
+                .isInstanceOf(HttpClientErrorException.NotFound.class);
     }
 
     private URI createProductURI() {
-        List<OptionRequest> options = List.of(new OptionRequest("기본 옵션", 10));
+        List<CreateOptionRequest> options = List.of(new CreateOptionRequest("기본 옵션", 10));
         CreateProductRequest productRequest = new CreateProductRequest(ProductTest.NAME, ProductTest.PRICE, ProductTest.IMAGE_URL, options);
         ResponseEntity<Void> response = restClient.post()
                 .uri("/api/products")

@@ -31,8 +31,8 @@ public class MemberEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(unique = true)
-    private Long kakaoId;
+    @Embedded
+    private KakaoInfoEmbeddable kakaoInfo;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<WishEntity> wishes = new ArrayList<>();
@@ -40,13 +40,13 @@ public class MemberEntity {
     protected MemberEntity() {
     }
 
-    public MemberEntity(Long id, String email, String password, Role role, LocalDateTime createdAt, Long kakaoId) {
+    public MemberEntity(Long id, String email, String password, Role role, LocalDateTime createdAt, KakaoInfoEmbeddable kakaoInfo) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
         this.createdAt = createdAt;
-        this.kakaoId = kakaoId;
+        this.kakaoInfo = kakaoInfo;
     }
 
     public Long getId() {
@@ -69,12 +69,12 @@ public class MemberEntity {
         return createdAt;
     }
 
-    public Long getKakaoId() {
-        return kakaoId;
+    public KakaoInfoEmbeddable getKakaoInfo() {
+        return kakaoInfo;
     }
 
-    public void setKakaoId(Long kakaoId) {
-        this.kakaoId = kakaoId;
+    public void setKakaoInfo(KakaoInfoEmbeddable kakaoInfo) {
+        this.kakaoInfo = kakaoInfo;
     }
 
     public List<WishEntity> getWishes() {

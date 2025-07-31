@@ -12,6 +12,8 @@ public class WishEntityMapper {
                 entity.getId(),
                 MemberEntityMapper.toDomain(entity.getMember()),
                 ProductEntityMapper.toDomain(entity.getProduct()),
+                entity.getOptionId(),
+                entity.getOptionName(),
                 entity.getQuantity()
         );
     }
@@ -22,6 +24,8 @@ public class WishEntityMapper {
                 domain.getId(),
                 MemberEntityMapper.toEntity(domain.getMember()),
                 ProductEntityMapper.toEntity(domain.getProduct()),
+                domain.getOptionId(),
+                domain.getOptionName(),
                 domain.getQuantity()
         );
     }

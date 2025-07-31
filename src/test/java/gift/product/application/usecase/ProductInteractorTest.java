@@ -1,7 +1,8 @@
 package gift.product.application.usecase;
 
+import gift.product.application.port.in.dto.CreateOptionRequest;
 import gift.product.application.port.in.dto.CreateProductRequest;
-import gift.product.application.port.in.dto.OptionRequest;
+import gift.product.application.port.in.dto.UpdateOptionRequest;
 import gift.product.application.port.in.dto.UpdateProductRequest;
 import gift.product.domain.model.Option;
 import gift.product.domain.model.Product;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,7 +65,7 @@ class ProductInteractorTest {
     void getProduct_fail() {
         given(productRepository.findById(1L)).willReturn(Optional.empty());
         assertThatThrownBy(() -> productInteractor.getProduct(1L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("상품을 찾을 수 없습니다");
     }
 
@@ -72,7 +74,7 @@ class ProductInteractorTest {
     void addProduct() {
         Option opt = Option.create(null, null, "옵션", 10);
         CreateProductRequest req = new CreateProductRequest("A", 100, "a.jpg", List.of(
-                new OptionRequest("옵션", 10)
+                new CreateOptionRequest("옵션", 10)
         ));
         Product saved = Product.create(1L, "A", 100, "a.jpg", List.of(opt));
         given(productRepository.save(any(Product.class))).willReturn(saved);
@@ -84,9 +86,9 @@ class ProductInteractorTest {
     @DisplayName("상품 수정 - 존재하지 않으면 예외")
     void updateProduct_fail() {
         given(productRepository.findById(1L)).willReturn(Optional.empty());
-        UpdateProductRequest req = new UpdateProductRequest("B", 200, "b.jpg", List.of(new OptionRequest("옵션", 1)));
+        UpdateProductRequest req = new UpdateProductRequest("B", 200, "b.jpg", List.of(new UpdateOptionRequest(null, "옵션", 1)));
         assertThatThrownBy(() -> productInteractor.updateProduct(1L, req))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("상품을 찾을 수 없습니다");
     }
 
@@ -98,7 +100,7 @@ class ProductInteractorTest {
         given(productRepository.findById(1L)).willReturn(Optional.of(existing));
 
         // 이름과 이미지URL은 기존 값을 유지하고, 가격과 옵션 수량만 변경
-        List<OptionRequest> updatedOptions = List.of(new OptionRequest("옵션", 20));
+        List<UpdateOptionRequest> updatedOptions = List.of(new UpdateOptionRequest(1L, "옵션", 20));
         UpdateProductRequest req = new UpdateProductRequest("A", 200, "a.jpg", updatedOptions);
 
         productInteractor.updateProduct(1L, req);
@@ -118,7 +120,7 @@ class ProductInteractorTest {
     void deleteProduct_fail() {
         given(productRepository.existsById(1L)).willReturn(false);
         assertThatThrownBy(() -> productInteractor.deleteProduct(1L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("상품을 찾을 수 없습니다");
     }
 

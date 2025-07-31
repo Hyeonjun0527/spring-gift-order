@@ -1,5 +1,6 @@
 package gift.product.domain.port.out;
 
+import gift.product.domain.model.Option;
 import gift.product.domain.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,11 @@ public interface ProductRepository {
 
     Optional<Product> findById(Long id);
 
+    Optional<Option> findOptionById(Long optionId);
+
     Product save(Product product);
+
+    Option saveOption(Option option);
 
     void deleteById(Long id);
 
