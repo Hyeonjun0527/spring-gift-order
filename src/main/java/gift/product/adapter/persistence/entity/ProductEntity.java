@@ -88,11 +88,23 @@ public class ProductEntity {
         setOptions(newOptions);
     }
 
+    public void changeName(String name) {
+        this.name = name;
+    }
+
     // (비교용) 작동하지 않는 옵션 설정 방식
     public void setOptionsByClearAndAdd(List<OptionEntity> newOptions) {
         this.options.clear();
         for (OptionEntity incoming : newOptions) {
             addOption(incoming);
+        }
+    }
+
+    // !! 테스트용: 이런 방식은 예외를 유발할 수 있습니다. !!
+    public void replaceOptionsForTest(List<OptionEntity> newOptions) {
+        this.options = newOptions;
+        for (OptionEntity option : newOptions) {
+            option.setProduct(this);
         }
     }
 

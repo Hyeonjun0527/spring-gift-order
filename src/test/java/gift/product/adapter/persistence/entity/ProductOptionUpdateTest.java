@@ -2,21 +2,23 @@ package gift.product.adapter.persistence.entity;
 
 import gift.product.adapter.persistence.repository.ProductJpaRepository;
 import jakarta.persistence.EntityManager;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
+@DataJpaTest
 @Transactional
 @TestPropertySource(properties = "spring.jpa.show-sql=true")
 public class ProductOptionUpdateTest {
@@ -45,25 +47,22 @@ public class ProductOptionUpdateTest {
     }
 
     @Test
-    @DisplayName("setOptionsByClearAndAdd: 옵션 하나만 수정해도 DELETE와 INSERT 쿼리가 모두 발생한다")
+    @DisplayName("setOptionsByClearAndAdd: clear & add 방식은 고유 키 제약 조건 위반을 일으킬 수 있다")
     void updateOptions_ByClearAndAdd() {
-        log.info("\n--- [Test Start] 비효율적인 방식(Clear & Add) ---");
+        log.info("\n--- [Test Start] 비효율적인 방식(Clear & Add)은 예외 발생 ---");
 
         // when: 옵션 A의 수량을 변경하고, 옵션 C를 새로 추가 (옵션 B는 제거)
         ProductEntity productToUpdate = productJpaRepository.findById(productId).orElseThrow();
         OptionEntity updatedOptionA = new OptionEntity("옵션A", 15);
         OptionEntity newOptionC = new OptionEntity("옵션C", 30);
 
-        productToUpdate.setOptionsByClearAndAdd(List.of(updatedOptionA, newOptionC));
-        entityManager.flush(); // 변경 감지 및 DB 반영 강제 실행
+        // when & then: flush 시점에 INSERT가 DELETE보다 먼저 실행되어 ConstraintViolationException 발생
+        assertThrows(ConstraintViolationException.class, () -> {
+            productToUpdate.setOptionsByClearAndAdd(List.of(updatedOptionA, newOptionC));
+            entityManager.flush(); // 변경 감지 및 DB 반영 강제 실행
+        });
 
-        log.info("--- [Test End] 비효율적인 방식(Clear & Add) ---\n");
-
-        // then: 최종 상태 검증
-        ProductEntity result = productJpaRepository.findById(productId).orElseThrow();
-        assertThat(result.getOptions()).hasSize(2);
-        assertThat(result.getOptions()).extracting("name").containsExactlyInAnyOrder("옵션A", "옵션C");
-        assertThat(result.getOptions()).extracting("quantity").containsExactlyInAnyOrder(15, 30);
+        log.info("--- [Test End] 비효율적인 방식(Clear & Add) 예외 발생 확인 ---\n");
     }
 
     @Test
