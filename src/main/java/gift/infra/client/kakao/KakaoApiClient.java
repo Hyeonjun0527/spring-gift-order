@@ -4,6 +4,7 @@ import gift.common.config.KakaoProperties;
 import gift.common.exception.KakaoApiClientException;
 import gift.member.application.port.in.dto.KakaoTokenResponse;
 import gift.member.application.port.in.dto.KakaoUserInfoResponse;
+import gift.member.application.port.out.KakaoAuthPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,7 +17,7 @@ import org.springframework.web.client.RestClient;
 import java.io.IOException;
 
 @Component
-public class KakaoApiClient {
+public class KakaoApiClient implements KakaoAuthPort {
 
     private static final Logger log = LoggerFactory.getLogger(KakaoApiClient.class);
     private final RestClient restClient;
@@ -28,6 +29,7 @@ public class KakaoApiClient {
         this.kakaoProperties = kakaoProperties;
     }
 
+    @Override
     public KakaoTokenResponse fetchToken(String authCode) {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
@@ -55,6 +57,7 @@ public class KakaoApiClient {
             .body(KakaoTokenResponse.class);
     }
 
+    @Override
     public KakaoUserInfoResponse fetchUserInfo(String accessToken) {
         return restClient.get()
             .uri(kakaoProperties.getUserInfoUri())

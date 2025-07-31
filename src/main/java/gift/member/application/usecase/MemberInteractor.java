@@ -3,9 +3,9 @@ package gift.member.application.usecase;
 import gift.common.exception.ForbiddenException;
 import gift.common.jwt.JwtTokenPort;
 import gift.common.security.PasswordEncoder;
-import gift.infra.client.kakao.KakaoApiClient;
 import gift.member.application.port.in.MemberUseCase;
 import gift.member.application.port.in.dto.*;
+import gift.member.application.port.out.KakaoAuthPort;
 import gift.member.domain.model.Member;
 import gift.member.domain.port.out.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -21,17 +21,17 @@ public class MemberInteractor implements MemberUseCase {
     private final MemberRepository memberRepository;
     private final JwtTokenPort jwtTokenPort;
     private final PasswordEncoder passwordEncoder;
-    private final KakaoApiClient kakaoApiClient;
+    private final KakaoAuthPort kakaoAuthPort;
 
     public MemberInteractor(
             MemberRepository memberRepository,
             JwtTokenPort jwtTokenPort,
             PasswordEncoder passwordEncoder,
-            KakaoApiClient kakaoApiClient) {
+            KakaoAuthPort kakaoAuthPort) {
         this.memberRepository = memberRepository;
         this.jwtTokenPort = jwtTokenPort;
         this.passwordEncoder = passwordEncoder;
-        this.kakaoApiClient = kakaoApiClient;
+        this.kakaoAuthPort = kakaoAuthPort;
     }
 
     @Override
@@ -61,10 +61,10 @@ public class MemberInteractor implements MemberUseCase {
 
     @Override
     public AuthResponse loginWithKakao(String authCode) {
-        KakaoTokenResponse tokenResponse = kakaoApiClient.fetchToken(authCode);
-        KakaoUserInfoResponse userInfoResponse = kakaoApiClient.fetchUserInfo(tokenResponse.accessToken());
+        KakaoTokenResponse tokenResponse = kakaoAuthPort.fetchToken(authCode);
+        KakaoUserInfoResponse userInfoResponse = kakaoAuthPort.fetchUserInfo(tokenResponse.accessToken());
 
-        Member member = memberRepository.findByKakaoId(userInfoResponse.id())
+        Member member = memberRepository.findByKakaoInfoKakaoId(userInfoResponse.id())
                 .orElseGet(() -> registerNewKakaoMember(userInfoResponse));
 
         Member updatedMember = member.withKakaoTokens(tokenResponse.accessToken(), tokenResponse.refreshToken());
@@ -78,7 +78,7 @@ public class MemberInteractor implements MemberUseCase {
         String password = passwordEncoder.encode(UUID.randomUUID().toString());
 
         Member newMember = Member.create(email, password)
-                                 .withKakaoId(userInfo.id());
+                                 .withKakaoInfo(new gift.member.domain.model.KakaoInfo(userInfo.id()));
 
         // registerNewKakaoMember에서는 토큰 정보를 저장하지 않음 (loginWithKakao에서 처리)
         return memberRepository.save(newMember);
@@ -115,7 +115,7 @@ public class MemberInteractor implements MemberUseCase {
                 encodedPassword,
                 request.role() != null ? request.role() : existingMember.role(),
                 existingMember.createdAt(),
-                existingMember.kakaoId()
+                existingMember.kakaoInfo()
         );
 
         memberRepository.save(updatedMember);
