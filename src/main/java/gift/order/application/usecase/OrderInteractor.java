@@ -2,12 +2,12 @@ package gift.order.application.usecase;
 
 import gift.member.domain.model.Member;
 import gift.member.domain.port.out.MemberRepository;
+import gift.notification.application.port.out.NotificationPort;
 import gift.order.application.port.in.OrderUseCase;
 import gift.order.application.port.in.dto.OrderResponse;
 import gift.order.application.port.in.dto.PlaceOrderRequest;
-import gift.order.application.port.out.KakaoMessagePort;
-import gift.order.application.port.out.OrderRepository;
 import gift.order.domain.model.Order;
+import gift.order.domain.port.out.OrderRepository;
 import gift.product.domain.model.Option;
 import gift.product.domain.model.Product;
 import gift.product.domain.port.out.ProductRepository;
@@ -24,14 +24,16 @@ public class OrderInteractor implements OrderUseCase {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final WishRepository wishRepository;
-    private final KakaoMessagePort kakaoMessagePort;
+    private final NotificationPort notificationPort;
 
-    public OrderInteractor(OrderRepository orderRepository, MemberRepository memberRepository, ProductRepository productRepository, WishRepository wishRepository, KakaoMessagePort kakaoMessagePort) {
+    public OrderInteractor(OrderRepository orderRepository, MemberRepository memberRepository,
+        ProductRepository productRepository, WishRepository wishRepository,
+        NotificationPort notificationPort) {
         this.orderRepository = orderRepository;
         this.memberRepository = memberRepository;
         this.productRepository = productRepository;
         this.wishRepository = wishRepository;
-        this.kakaoMessagePort = kakaoMessagePort;
+        this.notificationPort = notificationPort;
     }
 
     @Override
@@ -66,10 +68,8 @@ public class OrderInteractor implements OrderUseCase {
         // 4. 위시리스트에서 해당 상품 삭제
         wishRepository.deleteByMemberIdAndOptionId(memberId, request.optionId());
 
-        // 5. 카카오톡 메시지 발송
-        if (member.kakaoAccessToken() != null) {
-            kakaoMessagePort.sendOrderConfirmationMessage(member.kakaoAccessToken(), savedOrder, product, option);
-        }
+        // 5. 알림 포트를 통해 주문 완료 메시지 발송 요청 (비동기)
+        notificationPort.sendOrderConfirmationAsync(memberId, savedOrder.id());
 
         return OrderResponse.from(savedOrder);
     }
