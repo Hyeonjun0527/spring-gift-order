@@ -1,6 +1,7 @@
 package gift.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.common.jwt.JwtTokenPort;
 import gift.common.security.PasswordEncoder;
 import gift.member.application.port.in.dto.KakaoTokenResponse;
 import gift.member.application.port.in.dto.KakaoUserInfoResponse;
@@ -8,22 +9,14 @@ import gift.member.application.port.in.dto.LoginRequest;
 import gift.member.application.port.in.dto.RegisterRequest;
 import gift.member.domain.model.Member;
 import gift.member.domain.model.Role;
-import gift.common.jwt.JwtTokenPort;
 import gift.member.domain.port.out.MemberRepository;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
@@ -33,9 +26,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -112,7 +103,7 @@ public class MemberIntegrationTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.token").exists());
 
-            assertThat(memberRepository.findByKakaoId(12345L)).isPresent();
+            assertThat(memberRepository.findByKakaoInfoKakaoId(12345L)).isPresent();
         }
 
         @Test
