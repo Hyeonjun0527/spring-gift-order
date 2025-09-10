@@ -1,0 +1,12 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - if ! command -v aws >/dev/null; then curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip -u awscliv2.zip && sudo ./aws/install; fi
+  post_build:
+    commands:
+      - aws s3 sync ./src/main/resources/templates "s3://$S3_BUCKET" --delete
+      - aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths "/*"
+artifacts:
+  files:
+    - "**/*"
